@@ -3,25 +3,26 @@
  * 
  * A dice is represented like this :
  * 
- * 1     2
- * 3  4  5 
- * 6     7
+ *      1     2
+ *      3  4  5 
+ *      6     7
  */
 
-const int OUT_1 = 2; // The points : 4
-const int OUT_2 = 3; // The points : 1,7
-const int OUT_3 = 4; // The points : 2,6
-const int OUT_4 = 5; // The points : 3,5
+const int OUT_1 = 2; // Dice points : 4
+const int OUT_2 = 3; // Dice points : 1,7
+const int OUT_3 = 4; // Dice points : 2,6
+const int OUT_4 = 5; // Dice points : 3,5
+const int OUT_5 = 6; // The error led
+
 const int DELAY_TIMER_TEST = 1000;
 const int DELAY_TIMER = 5000;
-
-int randomNumber;
 
 void setup() {
   pinMode(OUT_1, OUTPUT);
   pinMode(OUT_2, OUTPUT);
   pinMode(OUT_3, OUTPUT);
   pinMode(OUT_4, OUTPUT);
+  pinMode(OUT_5, OUTPUT);
 
   randomSeed(analogRead(0));
 
@@ -29,7 +30,8 @@ void setup() {
 }
 
 void loop() {
-  showNumber(random(1, 7));
+  // The number 7 is not a valid number for dice, but it usefull to test error out (OUT_5)
+  showNumber(random(1, 8));
 
   delay(DELAY_TIMER);
   setAllOutOff();
@@ -59,6 +61,7 @@ void executeTest() {
  */
 void showNumber(int number) {
   setAllOutOff();
+  delay(DELAY_TIMER_TEST);
   
   switch (number) {
     case 1:
@@ -92,7 +95,9 @@ void showNumber(int number) {
       break;
 
     default:
-      setAllOutOn();
+      setAllOutOff();
+
+      setOutState(OUT_5, true);
   }
 }
 
@@ -114,6 +119,7 @@ void setAllOutOff() {
   setOutState(OUT_2, false);
   setOutState(OUT_3, false);
   setOutState(OUT_4, false);
+  setOutState(OUT_5, false);
 }
 
 /**
